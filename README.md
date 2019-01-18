@@ -1,2 +1,0 @@
-# mentorProject
-Created with CodeSandbox
