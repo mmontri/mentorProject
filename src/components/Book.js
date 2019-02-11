@@ -2,9 +2,13 @@ import React from "react";
 
 // Component to render each row of the table
 const Book = function(props) {
-  let authors;
-  let title;
-  let pages;
+  // <TODO:>Use defaults and deconstruction to eliminate all the error checking below</TODO:>
+  let {
+    title = "Undefined",
+    authors = "Not Listed",
+    pages = "Not Listed"
+  } = props;
+
   // Add error checking to avoid undefined props
   if (Array.isArray(props.author)) {
     authors = props.author.join(", ");

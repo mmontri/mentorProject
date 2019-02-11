@@ -24,16 +24,20 @@ export default class SearchField extends React.Component {
   render() {
     // console.log("At render, SearchField.state.query is " + this.state.query);
     return (
-      <div id="searchform">
-        <form onSubmit={this.handleSearch}>
-          <label htmlFor="search">Keyword search:</label>
+      <div id="search">
+        <form id="searchform" onSubmit={this.handleSearch}>
+          <label htmlFor="searchField">Keyword search:</label>
           <input
-            name="search"
-            id="search"
-            type="text"
+            name="searchField"
+            id="searchField"
+            type="search"
             onChange={this.handleChange}
           />
-          <button id="search" type="submit">
+          <button
+            id="search"
+            type="submit"
+            className="btn-large waves-effect waves-light"
+          >
             Search
           </button>
         </form>
