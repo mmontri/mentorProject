@@ -3,9 +3,6 @@ import Book from "./Book";
 
 // Component to render the sortable table header
 class SortHeader extends React.Component {
-  constructor(props) {
-    super(props);
-  }
   // Creating a function to pass the sort value back to the Table component
   // Doing it this way to avoid re-renders that could have been
   // caused by putting an arrow function on the onClick itself
@@ -15,7 +12,7 @@ class SortHeader extends React.Component {
 
   render() {
     return (
-      <button type="button" onClick={this.handleClick}>
+      <button type="button" className="btn-flat" onClick={this.handleClick}>
         {this.props.text}
       </button>
     );
@@ -29,14 +26,22 @@ export default class BookTable extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      sort: "default",
+      sortCol: "default",
+      sortAscending: true,
       status: "NOT_STARTED"
     };
   }
 
   // Function to change the sort method
   setSort = value => {
-    this.setState({ sort: value });
+    if (value === this.state.sortCol) {
+      // The sort is already set to this. Toggle between ascending and descending
+      const newSortDirection = !this.state.sortAscending;
+      this.setState({ sortAscending: newSortDirection });
+    } else {
+      // We're changing the column, so set it AND set to ascending
+      this.setState({ sortCol: value, sortAscending: true });
+    }
   };
 
   // Function to return sorted book list
@@ -54,6 +59,7 @@ export default class BookTable extends React.Component {
     function sortByAuthors(a, b) {
       let bookA;
       let bookB;
+
       if (Array.isArray(a.volumeInfo.authors)) {
         bookA = a.volumeInfo.authors[0].toUpperCase();
       } else {
@@ -66,8 +72,10 @@ export default class BookTable extends React.Component {
       }
       if (bookA > bookB) {
         return 1;
-      } else {
+      } else if (bookB < bookA) {
         return -1;
+      } else {
+        return 0;
       }
     }
     function sortByPages(a, b) {
@@ -77,30 +85,31 @@ export default class BookTable extends React.Component {
     }
 
     // Now look at the sort method and apply that sort.
-    const books = this.props.bookList;
-    console.log("Sort returned as " + this.state.sort);
-    switch (this.state.sort) {
-      case "title": {
-        const sortedBooks = books.sort(sortByTitle);
-        return sortedBooks;
-      }
-      case "author": {
-        const sortedBooks = books.sort(sortByAuthors);
-        return sortedBooks;
-      }
-      case "pages": {
-        const sortedBooks = books.sort(sortByPages);
-        return sortedBooks;
-      }
+    const books = this.props.bookList.slice();
+    console.log(
+      "Sort returned as " +
+        this.state.sortCol +
+        " " +
+        (this.state.sortAscending ? "Ascending" : "Descending")
+    );
+    switch (this.state.sortCol) {
+      case "title":
+        return books.sort(sortByTitle);
+      case "author":
+        return books.sort(sortByAuthors);
+      case "pages":
+        return books.sort(sortByPages);
       default:
         return books;
     }
   };
 
   render() {
-    // <TODO:>Use state.sort to convert books to sortedBooks</TODO:>
     if (Array.isArray(this.props.bookList)) {
-      const sortedBooks = this.sortBooks();
+      // <TODO:>Move this into the Sort function rather than here in the render.</TODO:>
+      const sortedBooks = this.state.sortAscending
+        ? this.sortBooks()
+        : this.sortBooks().reverse();
       console.log(sortedBooks);
       return (
         <div>
