@@ -11,9 +11,19 @@ class SortHeader extends React.Component {
   };
 
   render() {
+    const isActive = this.props.value === this.props.active;
+
+    const activeClass = isActive ? "active" : "";
+    const arrow = this.props.sortAscending ? "▲" : "▼";
+
     return (
-      <button type="button" className="btn-flat" onClick={this.handleClick}>
+      <button
+        type="button"
+        className={"btn-flat " + activeClass}
+        onClick={this.handleClick}
+      >
         {this.props.text}
+        {isActive ? arrow : ""}
       </button>
     );
   }
@@ -124,6 +134,8 @@ export default class BookTable extends React.Component {
                   <SortHeader
                     value="title"
                     text="Title"
+                    active={this.state.sortCol}
+                    sortAscending={this.state.sortAscending}
                     onHeaderClick={this.setSort}
                   />
                 </th>
@@ -131,6 +143,8 @@ export default class BookTable extends React.Component {
                   <SortHeader
                     value="author"
                     text="Author"
+                    active={this.state.sortCol}
+                    sortAscending={this.state.sortAscending}
                     onHeaderClick={this.setSort}
                   />
                 </th>
@@ -138,6 +152,8 @@ export default class BookTable extends React.Component {
                   <SortHeader
                     value="pages"
                     text="Number of Pages"
+                    active={this.state.sortCol}
+                    sortAscending={this.state.sortAscending}
                     onHeaderClick={this.setSort}
                   />
                 </th>
