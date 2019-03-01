@@ -44,6 +44,15 @@ export default class BookTable extends React.Component {
     }
   };
 
+  // Function that switches between ascending and descending sort.
+  applySortOrder(bookArr) {
+    if (this.state.sortAscending) {
+      return bookArr.reverse();
+    } else {
+      return bookArr;
+    }
+  }
+
   // Function to return sorted book list
   sortBooks = () => {
     //First, create compare functions for each sort method
@@ -86,19 +95,16 @@ export default class BookTable extends React.Component {
 
     // Now look at the sort method and apply that sort.
     const books = this.props.bookList.slice();
-    console.log(
-      "Sort returned as " +
-        this.state.sortCol +
-        " " +
-        (this.state.sortAscending ? "Ascending" : "Descending")
-    );
     switch (this.state.sortCol) {
-      case "title":
-        return books.sort(sortByTitle);
-      case "author":
-        return books.sort(sortByAuthors);
-      case "pages":
-        return books.sort(sortByPages);
+      case "title": {
+        return this.applySortOrder(books.sort(sortByTitle));
+      }
+      case "author": {
+        return this.applySortOrder(books.sort(sortByAuthors));
+      }
+      case "pages": {
+        return this.applySortOrder(books.sort(sortByPages));
+      }
       default:
         return books;
     }
@@ -106,10 +112,7 @@ export default class BookTable extends React.Component {
 
   render() {
     if (Array.isArray(this.props.bookList)) {
-      // <TODO:>Move this into the Sort function rather than here in the render.</TODO:>
-      const sortedBooks = this.state.sortAscending
-        ? this.sortBooks()
-        : this.sortBooks().reverse();
+      const sortedBooks = this.sortBooks();
       console.log(sortedBooks);
       return (
         <div>
